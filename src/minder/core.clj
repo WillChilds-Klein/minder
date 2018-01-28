@@ -18,7 +18,7 @@
    (try
      (let [data (slurp url)
            data (json/read-json data)]
-       (spit local-path (json/json-str data))  ; cache results locally for offline dev
+       (spit local-path (json/json-str data))               ; cache results locally for offline dev
        data)
      (catch Exception e
        (println "WARNING: caught exception while querying schedule, falling back to cached data")
@@ -52,14 +52,14 @@
 (defn walk-dates
   [dates]
   (cond
-    (< (count dates) 2)                             '()
-    (now-is-between? (first dates) (second dates))  (first dates)
-    :else                                           (recur (pop dates))))
+    (< (count dates) 2) '()
+    (now-is-between? (first dates) (second dates)) (first dates)
+    :else (recur (pop dates))))
 
 (defn find-current-event
   [date-map]
   (let [ks (keys date-map)
-        ks (sort #(compare %2 %1) ks)   ; sort in reverse lexicographic order
+        ks (sort #(compare %2 %1) ks)                       ; sort in reverse lexicographic order
         ks (into '() ks)
         date-key (walk-dates ks)]
     (get date-map date-key)))
