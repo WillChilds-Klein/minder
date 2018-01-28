@@ -2,7 +2,6 @@
   (:require
     [clojure.data.json :as json]
     [clojure.pprint :as pprint]
-    [clojure.string :as str]
     [clj-time.core :as t]
     [clj-time.format :as f]))
 
