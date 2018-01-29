@@ -3,20 +3,15 @@
     [clojure.data.json :as json]
     [clojure.java.io :as io]
     [uswitch.lambada.core :refer [deflambdafn]]
-    [minder.twitter :refer [post-tweet]]))
+    [minder.twitter :refer [post-tweet]]
+    [minder.core :refer [compose-tweet]]))
 
-(defn- abbrv-tweet
-  [text]
-  (if (> (count text) 240)
-    (-> text (subs 0 240) (str "..."))
-    text))
-
-(defn handler
+(defn- handler
   [data]
-  (let [text "the commander in queef says: \"%s\""
-        text (format text (-> data :text abbrv-tweet))]
-    (post-tweet text)
-    text))
+  (-> data
+      compose-tweet
+      post-tweet)
+  "success")
 
 (deflambdafn
   minder.server.lambdaPostHandler
