@@ -7,6 +7,8 @@
 (def factbase-url "https://factba.se/rss/calendar.json")
 (def est-parser (f/formatter :date-hour-minute-second
                              (t/time-zone-for-id "America/New_York")))
+(def iftt-parser (f/formatter "MMMM dd, yyyy 'at' hh:mmaa"
+                              (t/time-zone-for-id "America/New_York")))
 
 (defn fetch-schedule
   "cache json url's data on local filesystem and return that data. returns
@@ -16,7 +18,7 @@
    (try
      (let [data (slurp url)
            data (json/read-json data)]
-       ;(spit local-path (json/json-str data)) ; cache results for offline dev NOTE: MAY NOT WORK ON LAMBDA
+       (spit local-path (json/json-str data)) ; cache results for offline dev NOTE: MAY NOT WORK ON LAMBDA
        data)
      (catch Exception e
        (println "WARNING: caught exception while querying schedule, falling back
@@ -72,10 +74,6 @@
             construct-date-map
             (find-current-event d))))
 
-(defn event-underway?
-  ([] (event-underway? (t/now)))
-  ([d] (not (nil? (current-event d)))))
-
 ; ----------------------------------------
 
 (defn- abbrv-text
@@ -86,8 +84,10 @@
 
 (defn compose-tweet
   [data]
-  (let [event (current-event)]
-    (->> event
-         :details
-         abbrv-text
-         (format "the commander in queef is tweeting during \"%s\""))))
+  (let [dtime (f/parse iftt-parser (:created data))
+        event (current-event dtime)]
+    (when-not (nil? event)
+        (->> event
+             :details
+             abbrv-text
+             (format "the commander in queef is tweeting during \"%s\"")))))

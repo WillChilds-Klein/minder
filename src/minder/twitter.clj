@@ -13,5 +13,7 @@
 
 (defn post-tweet
   [s]
-  (statuses-update :oauth-creds my-creds
-                   :params {:status s}))
+  (when-not (nil? s)
+    (statuses-update :oauth-creds my-creds
+                     :params {:status s})
+    "status updated"))
