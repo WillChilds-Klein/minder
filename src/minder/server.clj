@@ -4,14 +4,15 @@
     [clojure.java.io :as io]
     [uswitch.lambada.core :refer [deflambdafn]]
     [minder.twitter :refer [post-tweet]]
-    [minder.core :refer [compose-tweet]]))
+    [minder.core :refer [compose-tweet event-underway?]]))
 
 (defn- handler
   [data]
-  (-> data
-      compose-tweet
-      post-tweet)
-  "success")
+  (when (event-underway?)
+    (-> data
+        compose-tweet
+        post-tweet)
+    "success"))
 
 (deflambdafn
   minder.server.lambdaPostHandler
