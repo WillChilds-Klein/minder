@@ -82,6 +82,10 @@
     (-> text (subs 0 230) (str "..."))
     text))
 
+(defn- salt-text
+  [text]
+  (apply str text " " (take 3 (repeatedly #(char (+ (rand 26) 65))))))
+
 (defn compose-tweet
   [data]
   (let [dtime (f/parse iftt-parser (:created data))
@@ -90,4 +94,5 @@
         (->> event
              :details
              abbrv-text
+             salt-text
              (format "the commander in queef is tweeting during \"%s\"")))))

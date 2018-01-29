@@ -3,9 +3,8 @@
     [clojure.data.json :as json]
     [clojure.java.io :as io]
     [uswitch.lambada.core :refer [deflambdafn]]
-    [minder.twitter :refer [post-tweet]]
     [minder.core :refer [compose-tweet]]
-    [clj-time.format :as f]))
+    [minder.twitter :refer [post-tweet]]))
 
 (defn- handler
   [data]
