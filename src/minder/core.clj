@@ -94,5 +94,5 @@
         (->> event
              :details
              abbrv-text
-             salt-text
-             (format "the commander in queef is tweeting during \"%s\"")))))
+             (format "the commander in queef is tweeting during \"%s\"")
+             salt-text))))
