@@ -13,6 +13,7 @@
 
 (defn post-tweet
   [s]
+  (println "tweet to be posted: '" s "'")
   (when-not (nil? s)
     (statuses-update :oauth-creds my-creds
                      :params {:status s})

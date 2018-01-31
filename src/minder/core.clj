@@ -88,8 +88,10 @@
 
 (defn compose-tweet
   [data]
+  (println data)
   (let [dtime (f/parse iftt-parser (:created data))
-        event (current-event dtime)]
+        event (current-event dtime)
+        _     (println event)]
     (when-not (nil? event)
         (->> event
              :details
