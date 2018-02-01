@@ -41,8 +41,8 @@
 (defn construct-date-map
   "constructs a map keyed by UTC start time str of event"
   [data]
-  (let [fmtr (f/formatter :date-hour-minute-second)]
-    (reduce #(assoc %1 (f/unparse fmtr (parse-date %2)) %2)
+  (let [unfmtr (f/formatter :date-hour-minute-second)]
+    (reduce #(assoc %1 (f/unparse unfmtr (parse-date %2)) %2)
       {}
       data)))
 
@@ -88,13 +88,21 @@
 
 (defn compose-tweet
   [data]
-  (println data)
   (let [dtime (f/parse iftt-parser (:created data))
-        event (current-event dtime)
-        _     (println event)]
+        event (current-event dtime)]
+    (println "data:" data)
+    (println "event:" event)
     (when-not (nil? event)
         (->> event
              :details
              abbrv-text
              (format "the commander in queef is tweeting during \"%s\"")
              salt-text))))
+
+;; TODO
+;;  - add 60-90 min. limit on event duration...
+;;  - add link to (or clever summary of) trump's tweet
+;;  - instead of constructing a 'date-map keyed by date, sort list of
+;;    calendar events lexically by (f/unparse unfmtr (parse-date event))
+;;  - filter events by :type tag
+;;  - stretch: use binary search instead of linear in 'walk-dates
