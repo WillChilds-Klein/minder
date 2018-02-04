@@ -18,7 +18,7 @@
    (try
      (let [data (slurp url)
            data (json/read-json data)]
-       (spit local-path (json/json-str data)) ; cache results for offline dev NOTE: MAY NOT WORK ON LAMBDA
+       (spit local-path (json/json-str data))
        data)
      (catch Exception e
        (println "WARNING: caught exception while querying schedule, falling back
@@ -48,8 +48,9 @@
 
 (defn datetime-is-between?
   [datetime d1 d2]
-  (t/within? (t/interval (f/parse d1) (f/parse d2))
-             datetime))
+  (let [intvl (t/interval (f/parse d1) (f/parse d2))]
+    (and (t/within? intvl datetime)
+         (< (t/in-minutes intvl) 90)))) ; 90 min. timeout
 
 (defn walk-dates
   [target dates]
@@ -100,9 +101,9 @@
              salt-text))))
 
 ;; TODO
-;;  - add 60-90 min. limit on event duration...
-;;  - add link to (or clever summary of) trump's tweet
-;;  - instead of constructing a 'date-map keyed by date, sort list of
-;;    calendar events lexically by (f/unparse unfmtr (parse-date event))
-;;  - filter events by :type tag
-;;  - stretch: use binary search instead of linear in 'walk-dates
+;; ====
+;; - add link to (or clever summary of) trump's tweet
+;; - instead of constructing a 'date-map keyed by date, sort list of
+;;   calendar events lexically by (f/unparse unfmtr (parse-date event))
+;; - filter events by :type tag?
+;; - stretch: use binary search instead of linear in 'walk-dates
