@@ -79,30 +79,32 @@
 
 (defn- abbrv-text
   [text]
-  (if (> (count text) 230)
-    (-> text (subs 0 230) (str "..."))
+  (if (> (count text) 220)
+    (-> text
+        (subs 0 220)
+        (str "..."))
     text))
 
-(defn- salt-text
-  [text]
-  (apply str text " " (take 3 (repeatedly #(char (+ (rand 26) 65))))))
+(defn- append-time
+  [dtime text]
+  (str text " at " (f/unparse (f/formatters :hour-minute) dtime) "."))
 
 (defn compose-tweet
   [data]
+  (when-not (empty? data)
+    (println "data:" data))
   (let [dtime (f/parse iftt-parser (:created data))
         event (current-event dtime)]
-    (println "data:" data)
-    (println "event:" event)
     (when-not (nil? event)
-        (->> event
-             :details
-             abbrv-text
-             (format "the commander in queef is tweeting during \"%s\"")
-             salt-text))))
+      (println "event:" event)
+      (->> event
+           :details
+           abbrv-text
+           (format "the commander in queef tweeted during \"%s\"")
+           (append-time dtime)))))
 
 ;; TODO
 ;; ====
-;; - add link to (or clever summary of) trump's tweet
 ;; - instead of constructing a 'date-map keyed by date, sort list of
 ;;   calendar events lexically by (f/unparse unfmtr (parse-date event))
 ;; - filter events by :type tag?
