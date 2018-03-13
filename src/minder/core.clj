@@ -5,10 +5,9 @@
     [clj-time.format :as f]))
 
 (def factbase-url "https://factba.se/rss/calendar.json")
-(def est-parser (f/formatter :date-hour-minute-second
-                             (t/time-zone-for-id "America/New_York")))
-(def iftt-parser (f/formatter "MMMM dd, yyyy 'at' hh:mmaa"
-                              (t/time-zone-for-id "America/New_York")))
+(def est (t/time-zone-for-id "America/New_York"))
+(def est-parser (f/formatter :date-hour-minute-second est))
+(def iftt-parser (f/formatter "MMMM dd, yyyy 'at' hh:mmaa" est))
 
 (defn fetch-schedule
   "cache json url's data on local filesystem and return that data. returns
@@ -87,7 +86,7 @@
 
 (defn- append-time
   [dtime text]
-  (str text " at " (f/unparse (f/formatters :hour-minute) dtime) "."))
+  (str text " at " (f/unparse (f/formatter :hour-minute est) dtime) "."))
 
 (defn compose-tweet
   [data]
