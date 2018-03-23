@@ -91,16 +91,16 @@
 (defn compose-tweet
   [data]
   (when-not (empty? data)
-    (println "data:" data))
-  (let [dtime (f/parse iftt-parser (:created data))
-        event (current-event dtime)]
-    (when-not (nil? event)
-      (println "event:" event)
-      (->> event
-           :details
-           abbrv-text
-           (format "the commander in queef tweeted during \"%s\"")
-           (append-time dtime)))))
+    (println "data:" data)
+    (let [dtime (f/parse iftt-parser (:created data))
+          event (current-event dtime)]
+      (when-not (nil? event)
+        (println "event:" event)
+        (->> event
+             :details
+             abbrv-text
+             (format "the commander in queef tweeted during \"%s\"")
+             (append-time dtime))))))
 
 ;; TODO
 ;; ====
