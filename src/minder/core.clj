@@ -99,7 +99,7 @@
         (->> event
              :details
              abbrv-text
-             (format "the commander in queef tweeted during \"%s\"")
+             (format "the cheeto-in-chief tweeted during \"%s\"")
              (append-time dtime))))))
 
 ;; TODO
